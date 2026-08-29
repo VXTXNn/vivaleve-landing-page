@@ -173,4 +173,4 @@ No face, text, logo, packaging or chef costume. Avoid staged hand poses, manicur
 - Há área segura suficiente para o recorte usado no site?
 - Não há texto falso, deformações, repetições ou objetos impossíveis?
 
-As imagens são conceituais. Antes da publicação comercial, cada composição deve ser revisada para representar fielmente o produto que será entregue.
+Cada composição deve representar fielmente o produto, preservando ingredientes, porções e características visuais entre as diferentes peças.

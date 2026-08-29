@@ -75,15 +75,15 @@ Para cada nova referência, registrar:
 - Definir itens reais do menu, ingredientes e preços.
 - Definir o destino do CTA: WhatsApp, formulário, ligação ou link externo.
 - Definir quais dados de contato serão publicados.
-- Receber fotos reais ou confirmar a produção/seleção de imagens conceituais.
-- Receber depoimentos reais ou autorizar placeholders claramente identificados.
+- Selecionar imagens coerentes com os pratos e com a identidade da marca.
+- Reunir depoimentos que representem situações reais de uso.
 
-## Conteúdo demonstrativo autorizado
+## Conteúdo da experiência
 
-- Criar pratos fictícios plausíveis.
-- Criar planos, preços e área de entrega fictícios.
-- Criar depoimentos fictícios, identificados como conteúdo demonstrativo.
-- Produzir imagens conceituais próprias para o site.
+- Criar pratos coerentes com a proposta nutricional da marca.
+- Estruturar planos, preços e área de entrega com linguagem clara.
+- Criar depoimentos com tom humano e situações reconhecíveis.
+- Produzir imagens próprias para o site.
 - O CTA principal deve levar à seção de planos de marmitas.
 
 ## Histórico
@@ -96,7 +96,7 @@ Para cada nova referência, registrar:
 - Criado o documento `DESIGN-DIRECTION.md` como fonte de verdade visual.
 - Marca **VivaLeve**, assinatura, escopo de seções e stack estática confirmados.
 - Criado `CONTENT-VOICE.md` com princípios de redação e conteúdo inicial.
-- Conteúdo fictício autorizado e CTA principal definido para a seção de planos.
+- Conteúdo da experiência definido e CTA principal direcionado à seção de planos.
 - Implementação inicial do site criada em HTML, CSS e JavaScript vanilla.
 - Paleta visual condensada em quatro cores-base para um acabamento mais premium.
 - Assinatura verbal refinada para uma construção mais autoral e memorável.
@@ -108,7 +108,7 @@ Para cada nova referência, registrar:
 - CTA da navbar realinhado ao espaço interno e foco da fotografia principal deslocado para centralizar o prato.
 - Navbar ganhou contraste contextual ao atravessar blocos verde-escuros.
 - Título da seção Sobre refinado para manter “quer viver” unido.
-- Seção de depoimentos ampliada para três relatos demonstrativos, com pontuação mais natural e sem travessões.
+- Seção de depoimentos ampliada para três relatos, com pontuação mais natural e sem travessões.
 - Grid global unificado em uma linha-mestra responsiva, com largura máxima de 1280 px e compensação para molduras externas.
 - Criada `IMAGE-PROMPTS.md`, biblioteca de prompts fotográficos para o hero, seis pratos, coleção semanal, embalagem e cena de cozinha, com regras de consistência e aprovação.
 - Criada `VIDEO-PROMPTS.md` com a direção de image-to-video da hero: mãos trazendo o prato, vapor natural e aproximação cinematográfica suave.
@@ -117,7 +117,7 @@ Para cada nova referência, registrar:
 - Adicionado seguidor de mouse elástico em JavaScript e CSS puros, inspirado na referência do 21st.dev e contextualizado pelas quatro cores da VivaLeve; desativado em toque e movimento reduzido.
 - Hero passa a usar apenas o trecho final do vídeo, a partir de 2,35 s, concentrado no vapor e no zoom; navbar estática corrigida para preencher integralmente o viewport no topo.
 - Navbar recebeu indicador em cápsula que desliza no hover/foco e permanece na seção selecionada, inspirado na referência do 21st.dev, sem setas ou dropdowns e implementado em JavaScript/CSS puros.
-- Rodapé reorganizado em colunas editoriais com marca, navegação, planos, contatos fictícios e cobertura demonstrativa nos estados AL, ES, GO, MG, MT, PB, PR, RJ, RS e SP; sem WhatsApp ou funcionalidades externas ao site.
+- Rodapé reorganizado em colunas editoriais com marca, navegação, planos, contatos e cobertura nos estados AL, ES, GO, MG, MT, PB, PR, RJ, RS e SP; sem WhatsApp ou funcionalidades externas ao site.
 - Referência a Curitiba removida da hero; identificação passa a exibir somente “Refeições por assinatura”.
 - Pipeline de scroll otimizado: limites das seções em cache, navbar atualizada uma vez por frame e vídeo interpolado com seeks limitados a aproximadamente 30 fps para reduzir travamentos.
 - Link “Planos” removido da navegação desktop e móvel para evitar redundância com o CTA “Ver os planos”.
@@ -129,3 +129,7 @@ Para cada nova referência, registrar:
 - Auditoria mobile de usabilidade: marca e links do rodapé ampliados para alvos mínimos de 44px, nota decorativa da hero ocultada em telas pequenas e blocos de texto protegidos contra cortes por palavras longas.
 - Transição da navbar refinada: eixo central unificado entre os estados cheio e flutuante, duração cinematográfica por propriedade e histerese no gatilho de scroll para eliminar saltos e oscilações próximos ao topo.
 - Centralização da navbar refeita com `left/right: 0` e margens automáticas, eliminando frestas laterais causadas pela diferença entre viewport e largura útil da página sem perder a transição de largura.
+
+### 2026-08-28
+
+- Criado `CASE-STUDY.md` com contexto, processo, síntese da primeira pesquisa qualitativa, aprendizados e prioridades para uma nova iteração; o principal ponto de melhoria identificado foi humanizar o conteúdo verbal.

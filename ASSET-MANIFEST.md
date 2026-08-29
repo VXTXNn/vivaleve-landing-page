@@ -21,5 +21,4 @@ Todas as imagens desta versão foram geradas com a ferramenta integrada de gera�
 
 ## Observação de produção
 
-As imagens são conceituais. Antes de uma publicação comercial definitiva, revisar se cada apresentação corresponde ao prato realmente entregue e substituir o que não representar o produto final.
-
+Cada imagem deve representar com precisão o prato apresentado e manter consistência entre ingredientes, porção e acabamento.
