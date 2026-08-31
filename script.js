@@ -23,7 +23,8 @@ if (finePointer && !reduceMotion) {
     position.x += velocity.x;
     position.y += velocity.y;
     follower.style.transform = `translate3d(${position.x}px, ${position.y}px, 0) translate(-50%, -50%)`;
-    followerFrame = requestAnimationFrame(renderFollower);
+    const moving = Math.abs(target.x - position.x) + Math.abs(target.y - position.y) + Math.abs(velocity.x) + Math.abs(velocity.y) > 0.1;
+    followerFrame = moving ? requestAnimationFrame(renderFollower) : 0;
   };
 
   const setFollowerContext = (element) => {
@@ -37,6 +38,7 @@ if (finePointer && !reduceMotion) {
   window.addEventListener('pointermove', (event) => {
     target.x = event.clientX;
     target.y = event.clientY;
+    if (!followerFrame) followerFrame = requestAnimationFrame(renderFollower);
     setFollowerContext(event.target);
     if (!followerVisible) {
       followerVisible = true;
@@ -88,24 +90,40 @@ refreshContrastBounds();
 setHeader();
 window.addEventListener('scroll', requestHeaderUpdate, { passive: true });
 
-menuButton?.addEventListener('click', () => {
-  const open = menuButton.getAttribute('aria-expanded') === 'true';
-  menuButton.setAttribute('aria-expanded', String(!open));
-  menuButton.setAttribute('aria-label', open ? 'Abrir menu' : 'Fechar menu');
-  mobileNav.classList.toggle('is-open', !open);
-  mobileNav.setAttribute('aria-hidden', String(open));
-  mobileNav.inert = open;
-  document.body.classList.toggle('menu-open', !open);
-});
+const menuBackground = [...document.querySelectorAll('main, footer, .site-header .wordmark, .skip-link')];
+const setMenuOpen = (open, returnFocus = false) => {
+  menuButton.setAttribute('aria-expanded', String(open));
+  menuButton.setAttribute('aria-label', open ? 'Fechar menu' : 'Abrir menu');
+  mobileNav.classList.toggle('is-open', open);
+  mobileNav.setAttribute('aria-hidden', String(!open));
+  mobileNav.inert = !open;
+  menuBackground.forEach((element) => { element.inert = open; });
+  document.body.classList.toggle('menu-open', open);
+  if (open) mobileNav.querySelector('a')?.focus({ preventScroll: true });
+  else if (returnFocus) menuButton.focus({ preventScroll: true });
+};
+menuButton?.addEventListener('click', () => setMenuOpen(menuButton.getAttribute('aria-expanded') !== 'true', true));
 
 mobileNav?.querySelectorAll('a').forEach((link) => link.addEventListener('click', () => {
-  menuButton.setAttribute('aria-expanded', 'false');
-  menuButton.setAttribute('aria-label', 'Abrir menu');
-  mobileNav.classList.remove('is-open');
-  mobileNav.setAttribute('aria-hidden', 'true');
-  mobileNav.inert = true;
-  document.body.classList.remove('menu-open');
+  setMenuOpen(false);
+  const destination = document.querySelector(link.hash);
+  destination?.setAttribute('tabindex', '-1');
+  destination?.focus({ preventScroll: true });
 }));
+document.addEventListener('keydown', (event) => {
+  if (menuButton.getAttribute('aria-expanded') !== 'true') return;
+  if (event.key === 'Escape') { event.preventDefault(); setMenuOpen(false, true); }
+  if (event.key === 'Tab') {
+    const links = [...mobileNav.querySelectorAll('a')];
+    const focusable = [menuButton, ...links];
+    const index = focusable.indexOf(document.activeElement);
+    event.preventDefault();
+    focusable[(index + (event.shiftKey ? -1 : 1) + focusable.length) % focusable.length].focus();
+  }
+});
+window.matchMedia('(max-width: 900px)').addEventListener('change', (event) => {
+  if (!event.matches) setMenuOpen(false);
+});
 
 const desktopNav = document.querySelector('.desktop-nav');
 const navIndicator = desktopNav?.querySelector('.nav-indicator');
@@ -195,15 +213,19 @@ window.addEventListener('load', () => {
 refreshNavSections();
 syncActiveNav();
 
-const observer = new IntersectionObserver((entries) => {
-  entries.forEach((entry) => {
-    entry.target.classList.toggle('visible', entry.isIntersecting);
-  });
-}, { threshold: 0.08, rootMargin: '-4% 0px -8% 0px' });
+if ('IntersectionObserver' in window && !reduceMotion) {
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+      entry.target.classList.toggle('visible', entry.isIntersecting);
+      entry.target.classList.add('reveal-ready');
+    });
+  }, { threshold: 0.08, rootMargin: '0px 0px -4% 0px' });
+  document.querySelectorAll('.reveal').forEach((element) => observer.observe(element));
+  // Keyboard navigation must never land in an invisible scroll-reveal container.
+  document.addEventListener('focusin', (event) => event.target.closest('.reveal')?.classList.add('visible'));
+}
 
-document.querySelectorAll('.reveal').forEach((element) => observer.observe(element));
-
-if (!reduceMotion) {
+if (!reduceMotion && finePointer) {
   const parallaxItems = [...document.querySelectorAll('.parallax')];
   let ticking = false;
   const updateParallax = () => {
@@ -211,7 +233,7 @@ if (!reduceMotion) {
       const rect = item.getBoundingClientRect();
       if (rect.bottom > 0 && rect.top < innerHeight) {
         const progress = (rect.top + rect.height / 2 - innerHeight / 2) / innerHeight;
-        item.style.backgroundPositionY = `calc(50% + ${progress * -44}px)`;
+        item.style.setProperty('--photo-offset', `${Math.max(-12, Math.min(12, progress * -16))}px`);
       }
     });
     ticking = false;
@@ -227,9 +249,9 @@ if (!reduceMotion) {
 
 const scrollVideo = document.querySelector('[data-scroll-video]');
 const hero = document.querySelector('.hero');
-const mobileHero = window.matchMedia('(max-width: 900px)').matches;
+const videoMedia = window.matchMedia('(min-width: 901px) and (prefers-reduced-motion: no-preference)');
 
-if (scrollVideo && hero && !mobileHero) {
+if (scrollVideo && hero) {
   let videoSyncFrame = 0;
   let videoRenderFrame = 0;
   let targetTime = 2.35;
@@ -246,7 +268,7 @@ if (scrollVideo && hero && !mobileHero) {
   };
 
   const renderVideoTime = (timestamp) => {
-    if (!videoReady) {
+    if (!videoReady || !videoMedia.matches) {
       videoRenderFrame = 0;
       return;
     }
@@ -268,7 +290,7 @@ if (scrollVideo && hero && !mobileHero) {
   };
 
   const syncVideoToScroll = () => {
-    if (!scrollVideo.duration || !Number.isFinite(scrollVideo.duration)) {
+    if (!videoMedia.matches || !scrollVideo.duration || !Number.isFinite(scrollVideo.duration)) {
       videoSyncFrame = 0;
       return;
     }
@@ -297,7 +319,18 @@ if (scrollVideo && hero && !mobileHero) {
   scrollVideo.addEventListener('loadedmetadata', () => {
     measureHero();
     requestVideoSync();
-  }, { once: true });
+  });
+  scrollVideo.addEventListener('seeked', () => scrollVideo.classList.add('is-ready'));
+  const updateVideoSource = () => {
+    const source = scrollVideo.querySelector('source');
+    videoReady = false;
+    scrollVideo.classList.remove('is-ready');
+    if (videoMedia.matches) source.src = source.dataset.src;
+    else source.removeAttribute('src');
+    scrollVideo.load();
+  };
+  videoMedia.addEventListener('change', updateVideoSource);
+  updateVideoSource();
   window.addEventListener('scroll', requestVideoSync, { passive: true });
   window.addEventListener('resize', () => {
     measureHero();
@@ -307,15 +340,55 @@ if (scrollVideo && hero && !mobileHero) {
   requestVideoSync();
 }
 
-document.querySelector('.contact-form')?.addEventListener('submit', (event) => {
+const contactForm = document.querySelector('.contact-form');
+const planSelect = contactForm.querySelector('[name="plano"]');
+const requestPreview = contactForm.querySelector('.request-preview');
+const planActions = [...document.querySelectorAll('[data-plan]')];
+const resetRequestPreview = () => {
+  requestPreview.hidden = true;
+  contactForm.querySelector('.form-status').textContent = '';
+};
+const syncPlanSelection = () => {
+  planActions.forEach((link) => link.closest('.plan').classList.toggle('is-selected', link.dataset.plan === planSelect.value));
+};
+planActions.forEach((link) => link.addEventListener('click', () => {
+  planSelect.value = link.dataset.plan;
+  syncPlanSelection();
+  resetRequestPreview();
+  planSelect.focus({ preventScroll: true });
+}));
+planSelect.addEventListener('change', syncPlanSelection);
+contactForm.addEventListener('input', (event) => {
+  resetRequestPreview();
+  if (event.target.matches('input')) {
+    event.target.removeAttribute('aria-invalid');
+    document.getElementById(`${event.target.id}-error`).textContent = '';
+  }
+});
+contactForm.querySelector('[data-edit-request]').addEventListener('click', () => {
+  resetRequestPreview();
+  planSelect.focus();
+});
+contactForm.addEventListener('submit', (event) => {
   event.preventDefault();
   const form = event.currentTarget;
   const status = form.querySelector('.form-status');
+  const name = form.elements.nome;
+  name.value = name.value.trim();
+  form.querySelectorAll('input').forEach((input) => {
+    const invalid = !input.validity.valid;
+    input.setAttribute('aria-invalid', String(invalid));
+    document.getElementById(`${input.id}-error`).textContent = invalid
+      ? (input.id === 'nome' ? 'Como podemos chamar você? Preencha seu nome.' : 'Informe um e-mail no formato nome@exemplo.com.') : '';
+  });
   if (!form.checkValidity()) {
-    status.textContent = 'Preencha seu nome e um e-mail válido para continuar.';
+    requestPreview.hidden = true;
+    status.textContent = 'Revise os campos indicados para continuar.';
     form.querySelector(':invalid')?.focus();
     return;
   }
-  status.textContent = 'Contato registrado nesta demonstração. Em breve, o cardápio chegaria ao seu e-mail.';
-  form.reset();
+  requestPreview.querySelector('.request-text').textContent = `Nome: ${name.value}\nE-mail: ${form.elements.email.value}\nInteresse: ${planSelect.value || 'Conhecer o cardápio primeiro'}`;
+  requestPreview.hidden = false;
+  status.textContent = 'Solicitação pronta para revisão. Nenhum dado foi enviado.';
+  requestPreview.focus({ preventScroll: true });
 });

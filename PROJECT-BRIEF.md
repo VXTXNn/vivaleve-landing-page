@@ -133,3 +133,14 @@ Para cada nova referência, registrar:
 ### 2026-08-28
 
 - Criado `CASE-STUDY.md` com contexto, processo, síntese da primeira pesquisa qualitativa, aprendizados e prioridades para uma nova iteração; o principal ponto de melhoria identificado foi humanizar o conteúdo verbal.
+
+### 2026-08-30 — Refinamento após a crítica
+
+- Corrigida a sobreposição de estilos nos depoimentos; textos mais diretos, sem caixa dentro de caixa. Removidos a nota 4,9 e o rótulo “Mais escolhido”, sem evidência de avaliação/popularidade.
+- Quatro cores mantidas, ajustando laranja para #ce6838 e carvão para #122019 para melhorar contraste. Descrições, metadados e textos de apoio ampliados.
+- Planos com critérios comparáveis, preço por refeição e CTA “Tenho interesse”. A escolha segue para o formulário; não há checkout nem envio real. A revisão local não apaga os campos e informa explicitamente que nada foi enviado.
+- Menu mobile com Escape, ciclo de foco, retorno ao botão e fechamento ao entrar no breakpoint desktop. Alvos de toque ampliados também no tablet.
+- Imagens WebP responsivas: cinco versões maiores totalizam 899.440 bytes; originais preservados. Vídeo sem source no mobile/movimento reduzido. Revelações mais leves e conteúdo visível sem JavaScript.
+- Verificação no navegador em 1440, 768 e 390 px: seleção de planos, formulário vazio/válido, Escape e alvos de toque. Trilho horizontal dos planos mantido, sem scroll vertical interno. JavaScript passou em `node --check`.
+- Detector Impeccable operou em fallback por ausência dos parsers; não é certificação de acessibilidade. Não houve teste em aparelho físico ou integração de e-mail. Depoimentos, dados nutricionais e contatos seguem como conteúdo de estudo, não evidências comerciais verificadas; revisar antes de lançar uma operação real.
+- Alterações locais; nenhuma publicação no GitHub nesta etapa.
